@@ -58,16 +58,28 @@ async def attack(ctx):
             await ctx.send("Kedua player harus memiliki Pokémon untuk memulai pertempuran!")  # Mengumumkan bahwa setidaknya salah satu petarung tidak memiliki Pokémon 
     else:
         await ctx.send("Tentukan pengguna yang ingin Kalian serang dengan menyebut mereka.")  # Meminta untuk menyebutkan pengguna untuk menyerang
+@bot.command()
+async def info(ctx):
+    # 2. Periksa apakah pengguna memiliki Pokémon
+    if ctx.author.name in Pokemon.pokemons:
+        # 3. Ambil Pokémon dari dictionary
+        pok = Pokemon.pokemons[ctx.author.name]
+        # 4. Kirim informasi Pokémon menggunakan info()
+        await ctx.send(await pok.info())
+    else:
+        await ctx.send("Kamu belum memiliki Pokémon.")
 
 @bot.command()
 async def feed(ctx):
-    author = ctx.author.name
-    if author in Pokemon.pokemons:
+    author = ctx.author.name  # Getting the name of the message's author
+    # Check whether the user already has a Pokémon. If not, then...
+    if author not in Pokemon.pokemons:  # Periksa apakah pengguna ini memiliki Pokémon 
         pokemon = Pokemon.pokemons[author]
-        result = pokemon.feed()
+        
+        result = await pokemon.feed
         await ctx.send(result)
     else:
-        await ctx.send("Kamu belum punya Pokémon.")
+        await ctx.send("Kamu belum memiliki Pokemon, gunakan !go")  # A message that is printed whether a Pokémon has already been created
         
 # Running the bot
 bot.run(token)
